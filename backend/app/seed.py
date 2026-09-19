@@ -11,7 +11,9 @@ def init_db():
     conn = connect()
     conn.executescript(
         """
-    CREATE TABLE IF NOT EXISTS stations(id INTEGER PRIMARY KEY, code TEXT, name TEXT);
+    CREATE TABLE IF NOT EXISTS stations(
+        id INTEGER PRIMARY KEY, code TEXT, name TEXT,
+        closed INTEGER NOT NULL DEFAULT 0, divert_to TEXT, closed_reason TEXT);
     CREATE TABLE IF NOT EXISTS edges(a TEXT, b TEXT);
     CREATE TABLE IF NOT EXISTS fare_rules(id INTEGER PRIMARY KEY, max_hops INTEGER, price REAL);
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);
@@ -19,6 +21,8 @@ def init_db():
         id INTEGER PRIMARY KEY, kind TEXT, input_json TEXT, result_json TEXT, created_at TEXT);
     """
     )
+    _ensure_station_columns(conn)
+    conn.commit()
     if conn.execute("SELECT COUNT(*) c FROM stations").fetchone()["c"] == 0:
         for code, name in [
             ("A1", "城站"),
@@ -42,3 +46,14 @@ def init_db():
         )
         conn.commit()
     conn.close()
+
+
+def _ensure_station_columns(conn):
+    """Add closure columns to pre-existing databases (fresh DBs already have them)."""
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(stations)").fetchall()}
+    if "closed" not in cols:
+        conn.execute("ALTER TABLE stations ADD COLUMN closed INTEGER NOT NULL DEFAULT 0")
+    if "divert_to" not in cols:
+        conn.execute("ALTER TABLE stations ADD COLUMN divert_to TEXT")
+    if "closed_reason" not in cols:
+        conn.execute("ALTER TABLE stations ADD COLUMN closed_reason TEXT")

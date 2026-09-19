@@ -17,3 +17,8 @@ button { background: var(--accent); border:0; padding:0.4rem 0.85rem; border-rad
 .hero-num { font-size:2.2rem; font-weight:700; color: var(--accent); }
 .muted { color: var(--muted); }
 input, select { background:#0a1528; border:1px solid var(--muted); color:var(--text); padding:0.35rem; border-radius:4px; }
+.tag { display:inline-block; padding:0.1rem 0.5rem; border-radius:6px; font-size:0.85rem; }
+.tag-closed { background:#5a1a1a; color:#ffb3b3; }
+.tag-divert { background:#4a3a10; color:#ffd97a; }
+.ok { color:#7fe0a8; }
+.err { color:#ff9a9a; }
