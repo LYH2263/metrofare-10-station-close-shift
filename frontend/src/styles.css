@@ -16,4 +16,9 @@ th,td { text-align:left; padding:0.4rem; border-bottom:1px solid #243860; }
 button { background: var(--accent); border:0; padding:0.4rem 0.85rem; border-radius:6px; font-weight:600; cursor:pointer; color:#051018; }
 .hero-num { font-size:2.2rem; font-weight:700; color: var(--accent); }
 .muted { color: var(--muted); }
+.closed-tag { color:#ffb347; font-weight:600; }
+.detour { color:#ffb347; }
+.err { color:#ff7b7b; }
+.close-form { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
+td a + a { margin-left:0.6rem; }
 input, select { background:#0a1528; border:1px solid var(--muted); color:var(--text); padding:0.35rem; border-radius:4px; }

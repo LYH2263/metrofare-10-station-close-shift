@@ -17,7 +17,12 @@ const run = async () => { out.value = await postJSON('/api/quote', { start: star
       <button @click="run">试算</button>
     </div>
     <div v-if="out" class="panel">
-      <p v-if="out.reachable">站数 {{ out.hops }} · 票价 <span class="hero-num">¥{{ out.fare }}</span></p>
+      <template v-if="out.reachable">
+        <p v-for="d in out.detours" :key="d.from" class="detour">{{ d.from }} 已封闭，本次改到 {{ d.to }}</p>
+        <p>站数 {{ out.hops }} · 票价 <span class="hero-num">¥{{ out.fare }}</span></p>
+        <p class="muted">途经 {{ out.path.join(' → ') }}</p>
+        <p v-if="out.rerouted" class="muted">实际按 {{ out.actual_start }} → {{ out.actual_end }} 寻路</p>
+      </template>
       <p v-else class="muted">不可达</p>
     </div>
   </div>

@@ -19,6 +19,15 @@ def init_db():
         id INTEGER PRIMARY KEY, kind TEXT, input_json TEXT, result_json TEXT, created_at TEXT);
     """
     )
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(stations)").fetchall()}
+    for col, ddl in [
+        ("closed", "ALTER TABLE stations ADD COLUMN closed INTEGER NOT NULL DEFAULT 0"),
+        ("reroute_to", "ALTER TABLE stations ADD COLUMN reroute_to TEXT"),
+        ("closed_reason", "ALTER TABLE stations ADD COLUMN closed_reason TEXT"),
+    ]:
+        if col not in cols:
+            conn.execute(ddl)
+    conn.commit()
     if conn.execute("SELECT COUNT(*) c FROM stations").fetchone()["c"] == 0:
         for code, name in [
             ("A1", "城站"),
